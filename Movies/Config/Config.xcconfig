@@ -1,0 +1,9 @@
+//
+//  Config.xcconfig
+//  Movies
+//
+//  Created by Ihor Myronishyn on 04.09.2023.
+//
+
+BASE_URL = api.themoviedb.org
+TOKEN = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiOWVjZmFjNWZjMzM5YTc2MGFhOGQwOGYxZjAxMGFmZSIsInN1YiI6IjY0ZjVkY2JhZTBjYTdmMDBlYzg4ZWFlZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3HRPxZg0iHUTSYdWFSk4HJhTidjoIBCVw_sELdy93ak
