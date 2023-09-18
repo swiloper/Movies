@@ -64,16 +64,15 @@ struct SlideshowView: View {
     private func pages(proxy: GeometryProxy) -> some View {
         TabView(selection: $selection) {
             ForEach(items) { item in
-                image(movie: item, proxy: proxy)
+                VStack(spacing: .zero) {
+                    image(movie: item, proxy: proxy)
+                    Color.black
+                        .frame(height: margin)
+                } //: VStack
             } //: ForEach
         } //: TabView
         .tabViewStyle(.page)
-        .background {
-            Color.gray.opacity(0.3)
-                .overlay(alignment: .bottom) {
-                    gradient
-                }
-        }
+        .background(Color.gray.opacity(0.3))
         .offset(y: parallax(proxy))
         .frame(width: size.width, height: proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + height + margin : height + margin)
         .overlay(alignment: .topLeading) {
@@ -86,7 +85,7 @@ struct SlideshowView: View {
     
     @ViewBuilder
     private func image(movie: Movie, proxy: GeometryProxy) -> some View {
-        VStack(spacing: .zero) {
+        GeometryReader {
             LazyImage(url: URL(string: EndpointPath.image(horizontal == .compact ? movie.poster : movie.backdrop))) { state in
                 ZStack {
                     if let image = state.image {
@@ -103,10 +102,9 @@ struct SlideshowView: View {
             .overlay(alignment: .bottom) {
                 gradient
             }
-            
-            Color.black
-                .frame(height: margin)
-        } //: VStack
+            .offset(x: -$0.frame(in: .global).minX / 2) // Makes a horizontal parallax effect, about turning pages.
+            .frame(width: size.width)
+        } //: GeometryReader
         .clipped()
     }
     
