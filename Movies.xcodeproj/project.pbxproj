@@ -220,17 +220,9 @@
 		F48151D82AA6F6C1001B3640 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				F48151D92AA6F6CC001B3640 /* View */,
-			);
-			path = Main;
-			sourceTree = "<group>";
-		};
-		F48151D92AA6F6CC001B3640 /* View */ = {
-			isa = PBXGroup;
-			children = (
 				F48151DA2AA6F6DC001B3640 /* MainView.swift */,
 			);
-			path = View;
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
