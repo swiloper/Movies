@@ -64,7 +64,9 @@ struct MovieCaruselView: View {
                 } //: ForEach
             } //: LazyHStack
             .padding(.horizontal, padding)
+            .scrollTargetLayout()
         } //: ScrollView
+        .scrollTargetBehavior(.viewAligned)
         .redacted(reason: items.isEmpty ? .placeholder : [])
         .disabled(items.isEmpty)
     }
