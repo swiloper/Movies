@@ -37,6 +37,23 @@ extension View {
                     .strokeBorder(color, lineWidth: width)
             }
     }
+    
+    @ViewBuilder
+    func offset(_ isObserve: Bool, completion: @escaping (CGRect) -> ()) -> some View {
+        self
+            .frame(maxWidth: .infinity)
+            .overlay {
+                if isObserve {
+                    GeometryReader {
+                        let frame = $0.frame(in: .global)
+                        
+                        Color.clear
+                            .preference(key: OffsetKey.self, value: frame)
+                            .onPreferenceChange(OffsetKey.self, perform: completion)
+                    } //: GeometryReader
+                }
+            }
+    }
 }
 
 // MARK: - Unwrapped
@@ -90,6 +107,14 @@ extension Int {
     
     func decremented() -> Int {
         return self - 1
+    }
+}
+
+// MARK: - Array
+
+extension Array {
+    func item(at index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }
 

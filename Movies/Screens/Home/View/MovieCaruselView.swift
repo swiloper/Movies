@@ -109,7 +109,7 @@ struct MovieCaruselView: View {
         } //: LazyImage
         .processors([ImageProcessors.Resize(size: CGSize(width: size.width, height: size.height))])
         .frame(width: size.width, height: size.height)
-        .background(Color.gray.opacity(0.3))
+        .background(Color.systemGray6)
         .overlay(alignment: .bottom) {
             ZStack(alignment: .bottomTrailing) {
                 LinearGradient(colors: [.clear, .black.opacity(0.1), .black.opacity(0.3)], startPoint: .top, endPoint: .bottom)

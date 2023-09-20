@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Movie: Identifiable, Decodable {
+struct Movie: Identifiable, Decodable, Equatable {
     
     // MARK: - Properties
     
-    let id: Int
+    var id: Int
     let backdrop: String
     let poster: String
     let title: String
