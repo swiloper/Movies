@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F402C00C2ABDAFA800B5EDED /* OpacityTransitionModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402C00B2ABDAFA800B5EDED /* OpacityTransitionModifier.swift */; };
+		F402C00E2ABDEAF500B5EDED /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402C00D2ABDEAF500B5EDED /* Layout.swift */; };
+		F402C0102ABDF34300B5EDED /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402C00F2ABDF34300B5EDED /* HeaderView.swift */; };
+		F42F4E7B2ABB8F8400C607F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42F4E7A2ABB8F8400C607F6 /* LaunchScreen.storyboard */; };
 		F45097F62AA7AEA400B4CFC6 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45097F52AA7AEA400B4CFC6 /* EnvironmentKeys.swift */; };
 		F48151962AA623C8001B3640 /* MoviesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48151952AA623C8001B3640 /* MoviesApp.swift */; };
 		F48151982AA623C8001B3640 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48151972AA623C8001B3640 /* HomeView.swift */; };
@@ -37,6 +41,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F402C00B2ABDAFA800B5EDED /* OpacityTransitionModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityTransitionModifier.swift; sourceTree = "<group>"; };
+		F402C00D2ABDEAF500B5EDED /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		F402C00F2ABDF34300B5EDED /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		F42F4E7A2ABB8F8400C607F6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F45097F52AA7AEA400B4CFC6 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
 		F48151922AA623C8001B3640 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48151952AA623C8001B3640 /* MoviesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesApp.swift; sourceTree = "<group>"; };
@@ -80,6 +88,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F42F4E792ABB8F5F00C607F6 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				F42F4E7A2ABB8F8400C607F6 /* LaunchScreen.storyboard */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
 		F48151892AA623C8001B3640 = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +117,7 @@
 			children = (
 				F48151B42AA62DCF001B3640 /* App */,
 				F48151BA2AA6305D001B3640 /* Config */,
+				F42F4E792ABB8F5F00C607F6 /* Launch */,
 				F48151B52AA62DD6001B3640 /* Helpers */,
 				F48151A32AA624C1001B3640 /* Network */,
 				F48151B62AA62DE3001B3640 /* Screens */,
@@ -169,10 +186,12 @@
 		F48151B52AA62DD6001B3640 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				F402C00D2ABDEAF500B5EDED /* Layout.swift */,
 				F48DD2062AB9E0C700050C57 /* OffsetKey.swift */,
 				F48151B82AA62E0B001B3640 /* Extensions.swift */,
 				F48DD2082AB9FC6900050C57 /* PageControl.swift */,
 				F45097F52AA7AEA400B4CFC6 /* EnvironmentKeys.swift */,
+				F402C00B2ABDAFA800B5EDED /* OpacityTransitionModifier.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -207,6 +226,7 @@
 			isa = PBXGroup;
 			children = (
 				F48151972AA623C8001B3640 /* HomeView.swift */,
+				F402C00F2ABDF34300B5EDED /* HeaderView.swift */,
 				F48151DC2AA6F860001B3640 /* SlideshowView.swift */,
 				F48151C72AA67955001B3640 /* MovieCaruselView.swift */,
 			);
@@ -300,6 +320,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F42F4E7B2ABB8F8400C607F6 /* LaunchScreen.storyboard in Resources */,
 				F481519D2AA623C9001B3640 /* Assets.xcassets in Resources */,
 				F481519A2AA623C9001B3640 /* Assets.xcassets in Resources */,
 			);
@@ -319,6 +340,7 @@
 				F48151B32AA62C62001B3640 /* EndpointPath.swift in Sources */,
 				F48151D72AA69746001B3640 /* GenresViewModel.swift in Sources */,
 				F48151D32AA6926F001B3640 /* Genre.swift in Sources */,
+				F402C00E2ABDEAF500B5EDED /* Layout.swift in Sources */,
 				F48151C32AA66664001B3640 /* MoviesViewModel.swift in Sources */,
 				F48151B92AA62E0B001B3640 /* Extensions.swift in Sources */,
 				F48151C82AA67955001B3640 /* MovieCaruselView.swift in Sources */,
@@ -328,9 +350,11 @@
 				F48DD2072AB9E0C700050C57 /* OffsetKey.swift in Sources */,
 				F45097F62AA7AEA400B4CFC6 /* EnvironmentKeys.swift in Sources */,
 				F48151DD2AA6F860001B3640 /* SlideshowView.swift in Sources */,
+				F402C00C2ABDAFA800B5EDED /* OpacityTransitionModifier.swift in Sources */,
 				F48151962AA623C8001B3640 /* MoviesApp.swift in Sources */,
 				F48151BE2AA63B94001B3640 /* Routable.swift in Sources */,
 				F48151DB2AA6F6DC001B3640 /* MainView.swift in Sources */,
+				F402C0102ABDF34300B5EDED /* HeaderView.swift in Sources */,
 				F48151A72AA624DA001B3640 /* Movie.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,7 +492,9 @@
 				INFOPLIST_FILE = Movies/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
@@ -503,7 +529,9 @@
 				INFOPLIST_FILE = Movies/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";

@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+struct LayoutKey: EnvironmentKey {
+    static var defaultValue = Layout()
+}
+
 struct ScreenSizeKey: EnvironmentKey {
     static let defaultValue: CGSize = .zero
 }
