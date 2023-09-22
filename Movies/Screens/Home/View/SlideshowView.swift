@@ -14,9 +14,10 @@ struct SlideshowView: View {
     
     // MARK: - Properties
     
-    @Environment(\.horizontalSizeClass) private var horizontal
-    @Environment(\.safeAreaInsets) private var insets
+    @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
+    @Environment(\.safeAreaInsets) private var insets
+    @Environment(\.horizontalSizeClass) private var horizontal
     
     @EnvironmentObject private var genres: GenresViewModel
     
@@ -48,17 +49,16 @@ struct SlideshowView: View {
     
     let items: [Movie]
     
-    private let margin: CGFloat = 30
-    private let padding: CGFloat = 20
-    
-    private var height: CGFloat {
-        horizontal == .compact ? size.width / 2 * 3 : size.width / 25 * 14
-    }
-    
     // MARK: - Parallax
     
     private func parallax(_ proxy: GeometryProxy) -> CGFloat {
         proxy.frame(in: .global).minY > .zero ? -proxy.frame(in: .global).minY : .zero
+    }
+    
+    // MARK: - Dynamic
+    
+    private func dynamic(length: CGFloat, proxy: GeometryProxy) -> CGFloat {
+        return proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + length : length
     }
     
     // MARK: - Index
@@ -91,27 +91,33 @@ struct SlideshowView: View {
                 if items.isEmpty {
                     empty(proxy: proxy)
                 } else {
-                    if proxy.frame(in: .global).minY > -height {
+                    if proxy.frame(in: .global).minY > -layout.height.slide {
                         pages(proxy: proxy)
                     }
                 }
             } //: ZStack
             .animation(.default, value: items.isEmpty)
+            .overlay(alignment: .bottom) {
+                control(proxy: proxy)
+            }
         } //: GeometryReader
-        .frame(height: height + margin)
+        .frame(height: layout.height.slideshow)
     }
     
     // MARK: - Header
     
     @ViewBuilder
     private func header(proxy: GeometryProxy) -> some View {
-        Text("Watch Now")
-            .font(.system(size: 35, weight: .bold))
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: insets.top + padding, leading: padding, bottom: .zero, trailing: padding))
-            .background(LinearGradient(colors: [.clear, .black.opacity(0.3)], startPoint: .bottom, endPoint: .top))
-            .offset(y: parallax(proxy))
+        HStack {
+            Text("Watch Now")
+                .font(.system(size: 35, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.top, insets.top)
+            Spacer()
+        } //: HStack
+        .padding(layout.padding)
+        .background(LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .bottom, endPoint: .top))
+        .offset(y: parallax(proxy))
     }
     
     // MARK: - Pages
@@ -124,17 +130,15 @@ struct SlideshowView: View {
             } //: ForEach
         } //: TabView
         .tabViewStyle(.page(indexDisplayMode: .never)) // Not suitable for displaying pages, as it was necessary to add two more elements to the slide array, for a seamless effect of an infinity slideshow.
-        .background(Color.systemGray6)
         .offset(y: parallax(proxy))
-        .frame(width: size.width, height: proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + height + margin : height + margin)
+        .frame(width: size.width, height: dynamic(length: layout.height.slideshow, proxy: proxy))
         .overlay(alignment: .top) {
             header(proxy: proxy)
         }
-        .overlay(alignment: .bottom) {
-            control(proxy: proxy)
-        }
         .onAppear {
-            setup()
+            if slides.isEmpty {
+                setup()
+            }
         }
     }
     
@@ -146,9 +150,10 @@ struct SlideshowView: View {
             let offset = $0.frame(in: .global).minX
             VStack(spacing: .zero) {
                 image(movie, proxy: proxy)
+                    .frame(width: size.width)
                     .offset(x: -offset / 2) // Makes a horizontal parallax effect, about turning pages.
                 Color.black
-                    .frame(height: margin)
+                    .frame(height: layout.margin)
             } //: VStack
             .overlay(alignment: .bottom) {
                 ZStack(alignment: .bottom) {
@@ -159,7 +164,7 @@ struct SlideshowView: View {
                     } //: HStack
                     .opacity(1.0 - abs(offset) / size.width) // Changes the visibility of the text below the slide, depending on the offset.
                 } //: ZStack
-                .padding(.bottom, margin)
+                .padding(.bottom, layout.margin)
             }
             .offset(selection == movie.id) { frame in
                 let offset = frame.minX - proxy.size.width * CGFloat(index(movie))
@@ -195,9 +200,8 @@ struct SlideshowView: View {
             } //: ZStack
             .animation(.default, value: state.isLoading)
         } //: LazyImage
-        .processors([ImageProcessors.Resize(size: CGSize(width: size.width, height: height))])
-        .frame(width: proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + size.width : size.width, height: proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + height : height)
-        .frame(width: size.width)
+        .processors([ImageProcessors.Resize(size: CGSize(width: size.width, height: layout.height.slide))])
+        .frame(width: dynamic(length: size.width, proxy: proxy), height: dynamic(length: layout.height.slide, proxy: proxy))
     }
     
     // MARK: - Details
@@ -221,16 +225,16 @@ struct SlideshowView: View {
                     .font(.system(size: 16, weight: .regular))
                     .lineLimit(3)
             } //: VStack
-            .frame(width: (size.width - padding * 2) / 2)
-            .padding(EdgeInsets(top: .zero, leading: padding, bottom: 16, trailing: .zero))
+            .frame(width: (size.width - layout.padding * 2) / 2)
+            .padding(EdgeInsets(top: .zero, leading: layout.padding, bottom: 16, trailing: .zero))
         }
     }
     
     // MARK: - Gradient
     
     private var gradient: some View {
-        LinearGradient(colors: [.clear, .black.opacity(0.1), .black.opacity(0.3), .black], startPoint: .top, endPoint: .bottom)
-            .frame(height: 250)
+        LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
+            .frame(height: 100)
     }
     
     // MARK: - Control
@@ -250,26 +254,17 @@ struct SlideshowView: View {
     @ViewBuilder
     private func empty(proxy: GeometryProxy) -> some View {
         Color.systemGray6
-            .frame(width: size.width, height: proxy.frame(in: .global).minY > .zero ? proxy.frame(in: .global).minY + height + margin : height + margin)
-            .offset(y: parallax(proxy))
-    }
-}
-
-// MARK: - Preview
-
-struct SlideshowView_Previews: PreviewProvider {
-    static var previews: some View {
-        GeometryReader { proxy in
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack {
-                    SlideshowView(items: Movie.preview)
-                    Spacer()
+            .frame(width: size.width, height: dynamic(length: layout.height.slideshow, proxy: proxy))
+            .overlay(alignment: .bottom) {
+                VStack(spacing: .zero) {
+                    gradient
+                    Color.black
+                        .frame(height: layout.margin)
                 } //: VStack
-            } //: ScrollView
-            .ignoresSafeArea(.container, edges: .top)
-            .environment(\.screenSize, proxy.size)
-            .environment(\.safeAreaInsets, proxy.safeAreaInsets)
-            .environmentObject(GenresViewModel())
-        } //: GeometryReader
+            }
+            .offset(y: parallax(proxy))
+            .overlay(alignment: .top) {
+                header(proxy: proxy)
+            }
     }
 }

@@ -11,14 +11,21 @@ struct MainView: View {
     
     // MARK: - Properties
     
+    @Environment(\.horizontalSizeClass) private var horizontal
+    
     @State private var selection: Int = .zero
     
     // MARK: - Body
     
     var body: some View {
-        TabView(selection: $selection) {
-            home
-        } //: TabView
+        GeometryReader { proxy in
+            TabView(selection: $selection) {
+                home
+            } //: TabView
+            .environment(\.screenSize, proxy.size)
+            .environment(\.safeAreaInsets, proxy.safeAreaInsets)
+            .environment(\.layout.height.slide, horizontal == .compact ? proxy.size.width / 2 * 3 : proxy.size.width / 25 * 14)
+        } //: GeometryReader
     }
     
     // MARK: - Home
@@ -36,8 +43,6 @@ struct MainView: View {
 
 // MARK: - Preview
 
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
-    }
+#Preview("Main") {
+    MainView()
 }

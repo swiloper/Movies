@@ -11,27 +11,38 @@ struct HomeView: View {
     
     // MARK: - Properties
     
+    @Environment(\.layout) private var layout
+    
     @StateObject private var movies = MoviesViewModel()
     @StateObject private var genres = GenresViewModel()
+    
+    @State private var offset: CGFloat = .zero
     
     // MARK: - Body
     
     var body: some View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: .zero) {
+                VStack(spacing: .zero) {
                     slideshow
                     carusels
-                } //: LazyVStack
+                } //: VStack
+                .offset {
+                    offset = $0.minY
+                }
             } //: ScrollView
             .ignoresSafeArea(.container, edges: .top)
             .task {
                 movies.list()
                 genres.list()
             }
+            .overlay(alignment: .top) {
+                HeaderView(offset: $offset)
+            }
         } //: NavigationStack
         .environmentObject(movies)
         .environmentObject(genres)
+        .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)
     }
     
     // MARK: - Slideshow
@@ -51,17 +62,5 @@ struct HomeView: View {
                 MovieCaruselView(category: key, items: movies)
             }
         } //: ForEach
-    }
-}
-
-// MARK: - Preview
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        GeometryReader { proxy in
-            HomeView()
-            .environment(\.screenSize, proxy.size)
-            .environment(\.safeAreaInsets, proxy.safeAreaInsets)
-        } //: GeometryReader
     }
 }

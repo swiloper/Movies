@@ -16,6 +16,11 @@ extension KeyedDecodingContainer {
 // MARK: - Environment
 
 extension EnvironmentValues {
+    var layout: Layout {
+        get { self[LayoutKey.self] }
+        set { self[LayoutKey.self] = newValue }
+    }
+    
     var screenSize: CGSize {
         get { self[ScreenSizeKey.self] }
         set { self[ScreenSizeKey.self] = newValue }
@@ -39,7 +44,7 @@ extension View {
     }
     
     @ViewBuilder
-    func offset(_ isObserve: Bool, completion: @escaping (CGRect) -> ()) -> some View {
+    func offset(_ isObserve: Bool = true, completion: @escaping (CGRect) -> ()) -> some View {
         self
             .frame(maxWidth: .infinity)
             .overlay {
@@ -130,6 +135,7 @@ extension Data {
 // MARK: - Color
 
 extension Color {
+    static let line = Color("LineColor")
     static let label = Color(uiColor: .label)
     static let systemGray6 = Color(uiColor: .systemGray6)
 }

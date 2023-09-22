@@ -7,6 +7,6 @@
 	<key>TOKEN</key>
 	<string>$(TOKEN)</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

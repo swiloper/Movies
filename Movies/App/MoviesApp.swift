@@ -9,13 +9,12 @@ import SwiftUI
 
 @main
 struct MoviesApp: App {
+    
+    // MARK: - Body
+    
     var body: some Scene {
         WindowGroup {
-            GeometryReader { proxy in
-                MainView()
-                    .environment(\.screenSize, proxy.size)
-                    .environment(\.safeAreaInsets, proxy.safeAreaInsets)
-            } //: GeometryReader
+            MainView()
         } //: WindowGroup
     }
 }

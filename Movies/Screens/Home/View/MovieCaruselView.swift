@@ -14,15 +14,15 @@ struct MovieCaruselView: View {
     
     // MARK: - Properties
     
+    @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
     @Environment(\.horizontalSizeClass) private var horizontal
+    
     @EnvironmentObject private var movies: MoviesViewModel
     @EnvironmentObject private var genres: GenresViewModel
     
     let category: Category
     let items: [Movie]
-    
-    private let padding: CGFloat = 20
     
     // MARK: - Body
     
@@ -49,7 +49,7 @@ struct MovieCaruselView: View {
                 .foregroundColor(.gray)
         } //: HStack
         .fontWeight(.bold)
-        .padding(.horizontal, padding)
+        .padding(.horizontal, layout.padding)
     }
     
     // MARK: - List
@@ -63,7 +63,7 @@ struct MovieCaruselView: View {
                     preview(index: index, item: item)
                 } //: ForEach
             } //: LazyHStack
-            .padding(.horizontal, padding)
+            .padding(.horizontal, layout.padding)
             .scrollTargetLayout()
         } //: ScrollView
         .scrollTargetBehavior(.viewAligned)
@@ -78,7 +78,7 @@ struct MovieCaruselView: View {
         let width: CGFloat = {
             let count: CGFloat = horizontal == .compact ? category == .upcoming ? 1 : 2 : category == .upcoming ? 3 : 5
             let spacing: CGFloat = 10
-            return (size.width - padding - spacing * count - spacing) / count
+            return (size.width - layout.padding - spacing * count - spacing) / count
         }()
             
         VStack(alignment: .leading) {
@@ -164,33 +164,5 @@ struct MovieCaruselView: View {
             } //: HStack
             .frame(height: 30)
         }
-    }
-}
-
-// MARK: - Preview
-
-struct MovieCaruselView_Previews: PreviewProvider {
-    static let genres = GenresViewModel()
-    static let category: Category = .rated
-    static let height: CGFloat = {
-        category == .rated ? 202 : 164
-    }()
-    
-    static var previews: some View {
-        GeometryReader { proxy in
-            VStack {
-                Spacer()
-                MovieCaruselView(category: category, items: Movie.preview)
-                    .frame(height: height)
-                    .environmentObject(MoviesViewModel())
-                    .environmentObject(genres)
-                    .task {
-                        genres.list()
-                    }
-                Spacer()
-            } //: VStack
-            .environment(\.screenSize, proxy.size)
-        } //: GeometryReader
-        .previewLayout(.fixed(width: 393, height: height))
     }
 }
