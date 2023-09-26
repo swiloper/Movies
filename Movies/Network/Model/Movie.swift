@@ -7,6 +7,58 @@
 
 import Foundation
 
+struct Country: Decodable, Equatable {
+    
+    // MARK: - Properties
+    
+    let locale: String
+    let name: String
+    
+    // MARK: - Keys
+    
+    enum CodingKeys: String, CodingKey {
+        case locale = "iso_3166_1"
+        case name
+    }
+}
+
+struct Language: Decodable, Equatable {
+    
+    // MARK: - Properties
+    
+    let name: String
+    
+    // MARK: - Keys
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "english_name"
+    }
+}
+
+struct Rate: Decodable, Equatable {
+    
+    // MARK: - Properties
+    
+    var average: Double = .zero
+    var votes: Int = .zero
+}
+
+struct Studio: Decodable, Identifiable, Equatable {
+    
+    // MARK: - Properties
+    
+    let id: Int
+    let logo: String?
+    let name: String
+    
+    // MARK: - Keys
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case logo = "logo_path"
+    }
+}
+
 struct Movie: Identifiable, Decodable, Equatable {
     
     // MARK: - Properties
@@ -19,23 +71,38 @@ struct Movie: Identifiable, Decodable, Equatable {
     let adult: Bool
     let overview: String
     let release: String
+    let runtime: Int
+    let homepage: String
+    let studios: [Studio]
+    let countries: [Country]
+    let languages: [Language]
+    let status: String
+    let tagline: String
     
     var date: Date?
     var year: String = .empty
+    var premiere: String = .empty
+    var duration: String = .empty
+    var rate = Rate()
     
     // MARK: - Keys
     
     enum CodingKeys: String, CodingKey {
-        case id, title, adult, overview
+        case id, title, adult, overview, runtime, homepage, status, tagline
         case backdrop = "backdrop_path"
         case poster = "poster_path"
         case genres = "genre_ids"
         case release = "release_date"
+        case studios = "production_companies"
+        case countries = "production_countries"
+        case languages = "spoken_languages"
+        case average = "vote_average"
+        case votes = "vote_count"
     }
     
     // MARK: - Init
     
-    init(id: Int, backdrop: String, poster: String, title: String, genres: [Int], adult: Bool, overview: String, release: String) {
+    init(id: Int, backdrop: String, poster: String, title: String, genres: [Int], adult: Bool, overview: String, release: String, runtime: Int = .zero, homepage: String = .empty , studios: [Studio] = [], countries: [Country] = [], languages: [Language] = [], status: String = .empty, tagline: String = .empty, rate: Rate = Rate()) {
         self.id = id
         self.backdrop = backdrop
         self.poster = poster
@@ -44,11 +111,22 @@ struct Movie: Identifiable, Decodable, Equatable {
         self.adult = adult
         self.overview = overview
         self.release = release
+        self.runtime = runtime
+        self.homepage = homepage
+        self.studios = studios
+        self.countries = countries
+        self.languages = languages
+        self.status = status
+        self.tagline = tagline
+        self.rate = rate
         date = DateFormatter.default.date(from: release)
         
         if let date {
             year = DateFormatter.year.string(from: date)
+            premiere = DateFormatter.short.string(from: date)
         }
+        
+        duration = time(from: runtime)
     }
     
     // MARK: - Decoder
@@ -63,11 +141,32 @@ struct Movie: Identifiable, Decodable, Equatable {
         adult = try container.decode(key: .adult, default: true)
         overview = try container.decode(key: .overview, default: .empty)
         release = try container.decode(key: .release, default: .empty)
+        runtime = try container.decode(key: .runtime, default: .zero)
+        homepage = try container.decode(key: .homepage, default: .empty)
+        studios = try container.decode(key: .studios, default: [])
+        countries = try container.decode(key: .countries, default: [])
+        languages = try container.decode(key: .languages, default: [])
+        status = try container.decode(key: .status, default: .empty)
+        tagline = try container.decode(key: .tagline, default: .empty)
+        rate.average = try container.decode(key: .average, default: .zero)
+        rate.votes = try container.decode(key: .votes, default: .zero)
+        
         date = DateFormatter.default.date(from: release)
         
         if let date {
             year = DateFormatter.year.string(from: date)
+            premiere = DateFormatter.short.string(from: date)
         }
+        
+        duration = time(from: runtime)
+    }
+    
+    // MARK: - Time
+    
+    private func time(from minutes: Int) -> String {
+        let hours = minutes / 60
+        let minutes = minutes % 60
+        return [hours > .zero ? "\(hours) hr" : .empty, minutes > .zero ? "\(minutes) min" : .empty].filter({ !$0.isEmpty }).joined(separator: .space)
     }
 }
 

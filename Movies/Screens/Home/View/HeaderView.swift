@@ -34,7 +34,7 @@ struct HeaderView: View {
         .overlay(alignment: .bottom) {
             line
         }
-        .modifier(OpacityTransitionModifier(offset: $offset, range: lower...upper))
+        .modifier(OpacityTransitionModifier(offset: $offset, value: .constant(.zero), range: lower...upper))
     }
     
     // MARK: - Line

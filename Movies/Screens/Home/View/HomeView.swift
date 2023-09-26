@@ -21,25 +21,23 @@ struct HomeView: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: .zero) {
-                    slideshow
-                    carusels
-                } //: VStack
-                .offset {
-                    offset = $0.minY
-                }
-            } //: ScrollView
-            .ignoresSafeArea(.container, edges: .top)
-            .task {
-                movies.list()
-                genres.list()
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: .zero) {
+                slideshow
+                carusels
+            } //: VStack
+            .offset {
+                offset = $0.minY
             }
-            .overlay(alignment: .top) {
-                HeaderView(offset: $offset)
-            }
-        } //: NavigationStack
+        } //: ScrollView
+        .ignoresSafeArea(.container, edges: .top)
+        .task {
+            movies.list()
+            genres.list()
+        }
+        .overlay(alignment: .top) {
+            HeaderView(offset: $offset)
+        }
         .environmentObject(movies)
         .environmentObject(genres)
         .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)

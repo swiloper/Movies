@@ -12,6 +12,7 @@ final class MoviesViewModel: ObservableObject {
     // MARK: - Properties
     
     @Published var loading: [Category] = []
+    @Published var selected: Int?
     @Published var error: Error?
     @Published var categories: [Category : [Movie]] = {
         var initial: [Category : [Movie]] = [:]

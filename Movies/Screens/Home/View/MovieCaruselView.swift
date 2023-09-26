@@ -42,7 +42,7 @@ struct MovieCaruselView: View {
         HStack {
             Text(category.description)
                 .font(.system(size: 23))
-                .foregroundColor(.label)
+                .foregroundStyle(Color.label)
             
             Image(systemName: "chevron.right")
                 .font(.system(size: 18))
@@ -60,7 +60,13 @@ struct MovieCaruselView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
                 ForEach(Array(previews.enumerated()), id: \.offset) { index, item in
-                    preview(index: index, item: item)
+                    NavigationLink {
+                        MovieDetailView(id: item.id)
+                            .environmentObject(movies)
+                    } label: {
+                        preview(index: index, item: item)
+                    } //: NavigationLink
+                    .buttonStyle(.plain)
                 } //: ForEach
             } //: LazyHStack
             .padding(.horizontal, layout.padding)

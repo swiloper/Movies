@@ -32,6 +32,19 @@ extension EnvironmentValues {
     }
 }
 
+// MARK: - Navigation
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
+
 // MARK: - View
 
 extension View {
@@ -83,6 +96,27 @@ extension DateFormatter {
         formatter.locale = Locale(identifier: "en_us")
         return formatter
     }()
+    
+    static let short: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM yyyy"
+        formatter.locale = Locale(identifier: "en_us")
+        return formatter
+    }()
+}
+
+extension NumberFormatter {
+    static let average: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.minimumFractionDigits = .zero
+        formatter.maximumFractionDigits = 1
+        return formatter
+    }()
+}
+
+extension Axis.Set {
+    static let none: Axis.Set = []
 }
 
 // MARK: - Bundle
@@ -101,6 +135,7 @@ extension Bundle {
 
 extension String {
     static let empty = ""
+    static let space = " "
 }
 
 // MARK: - Int

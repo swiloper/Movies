@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import Nuke
 import NukeUI
+import Nuke
 
 @MainActor
 struct SlideshowView: View {
@@ -19,6 +19,7 @@ struct SlideshowView: View {
     @Environment(\.safeAreaInsets) private var insets
     @Environment(\.horizontalSizeClass) private var horizontal
     
+    @EnvironmentObject private var movies: MoviesViewModel
     @EnvironmentObject private var genres: GenresViewModel
     
     @State private var selection: Int = .zero
@@ -144,14 +145,31 @@ struct SlideshowView: View {
     
     // MARK: - Slide
     
-    @ViewBuilder
+    @ViewBuilder 
     private func slide(_ movie: Movie, proxy: GeometryProxy) -> some View {
         GeometryReader {
             let offset = $0.frame(in: .global).minX
             VStack(spacing: .zero) {
-                image(movie, proxy: proxy)
-                    .frame(width: size.width)
-                    .offset(x: -offset / 2) // Makes a horizontal parallax effect, about turning pages.
+                NavigationLink {
+                    let id: Int = {
+                        if movie == slides.first, let last = items.last {
+                            return last.id
+                        } else if movie == slides.last, let first = items.first {
+                            return first.id
+                        }
+                        
+                        return movie.id
+                    }()
+                    
+                    MovieDetailView(id: id)
+                        .environmentObject(movies)
+                } label: {
+                    image(movie, proxy: proxy)
+                        .frame(width: size.width)
+                        .offset(x: movies.selected == nil ? -offset / 2 : .zero) // Makes a horizontal parallax effect, about turning pages.
+                } //: NavigationLink
+                .buttonStyle(.plain)
+                
                 Color.black
                     .frame(height: layout.margin)
             } //: VStack
