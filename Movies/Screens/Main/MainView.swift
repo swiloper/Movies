@@ -19,9 +19,11 @@ struct MainView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            TabView(selection: $selection) {
-                home
-            } //: TabView
+            NavigationStack {
+                TabView(selection: $selection) {
+                    home
+                } //: TabView
+            } //: NavigationStack
             .environment(\.screenSize, proxy.size)
             .environment(\.safeAreaInsets, proxy.safeAreaInsets)
             .environment(\.layout.height.slide, horizontal == .compact ? proxy.size.width / 2 * 3 : proxy.size.width / 25 * 14)

@@ -12,6 +12,8 @@ struct OpacityTransitionModifier: ViewModifier {
     // MARK: - Properties
     
     @Binding var offset: CGFloat
+    @Binding var value: CGFloat
+    
     let range: ClosedRange<CGFloat>
     
     private var opacity: CGFloat {
@@ -27,5 +29,8 @@ struct OpacityTransitionModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(opacity)
+            .onChange(of: opacity) {
+                value = $1
+            }
     }
 }
