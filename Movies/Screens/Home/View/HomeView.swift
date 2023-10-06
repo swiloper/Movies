@@ -12,9 +12,8 @@ struct HomeView: View {
     // MARK: - Properties
     
     @Environment(\.layout) private var layout
-    
-    @StateObject private var movies = MoviesViewModel()
-    @StateObject private var genres = GenresViewModel()
+    @Environment(MoviesViewModel.self) private var movies
+    @Environment(GenresViewModel.self) private var genres
     
     @State private var offset: CGFloat = .zero
     
@@ -38,9 +37,9 @@ struct HomeView: View {
         .overlay(alignment: .top) {
             HeaderView(offset: $offset)
         }
-        .environmentObject(movies)
-        .environmentObject(genres)
         .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)
+        .toolbar(.visible, for: .navigationBar)
+        .toolbarBackground(.hidden, for: .navigationBar)
     }
     
     // MARK: - Slideshow

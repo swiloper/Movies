@@ -8,6 +8,17 @@
 import Foundation
 
 struct MovieListResponse: Decodable {
+    
+    // MARK: - Properties
+    
     let page: Int
     let results: [Movie]
+    let totalPages: Int
+    
+    // MARK: - Keys
+    
+    enum CodingKeys: String, CodingKey {
+        case page, results
+        case totalPages = "total_pages"
+    }
 }

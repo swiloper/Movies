@@ -42,6 +42,8 @@
 		F48DD2092AB9FC6900050C57 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DD2082AB9FC6900050C57 /* PageControl.swift */; };
 		F4A3F3CC2AC08D1E00E3DB5F /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A3F3CB2AC08D1E00E3DB5F /* InformationView.swift */; };
 		F4A3F3D02AC29B2300E3DB5F /* StudiosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A3F3CF2AC29B2300E3DB5F /* StudiosView.swift */; };
+		F4A3F3D32AC2A96600E3DB5F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A3F3D22AC2A96600E3DB5F /* CategoryView.swift */; };
+		F4A3F3D72AC2A9E600E3DB5F /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A3F3D62AC2A9E600E3DB5F /* CategoryViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		F48DD2082AB9FC6900050C57 /* PageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		F4A3F3CB2AC08D1E00E3DB5F /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		F4A3F3CF2AC29B2300E3DB5F /* StudiosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudiosView.swift; sourceTree = "<group>"; };
+		F4A3F3D22AC2A96600E3DB5F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		F4A3F3D62AC2A9E600E3DB5F /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +241,7 @@
 				F48151D82AA6F6C1001B3640 /* Main */,
 				F48151BF2AA66647001B3640 /* Home */,
 				F402C0112ABE1E0A00B5EDED /* Detail */,
+				F4A3F3D12AC2A94E00E3DB5F /* Category */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -285,6 +290,31 @@
 				F48151DA2AA6F6DC001B3640 /* MainView.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		F4A3F3D12AC2A94E00E3DB5F /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				F4A3F3D52AC2A96D00E3DB5F /* Model */,
+				F4A3F3D42AC2A96900E3DB5F /* View */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		F4A3F3D42AC2A96900E3DB5F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F4A3F3D22AC2A96600E3DB5F /* CategoryView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F4A3F3D52AC2A96D00E3DB5F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F4A3F3D62AC2A9E600E3DB5F /* CategoryViewModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -387,10 +417,12 @@
 				F48DD2072AB9E0C700050C57 /* OffsetKey.swift in Sources */,
 				F45097F62AA7AEA400B4CFC6 /* EnvironmentKeys.swift in Sources */,
 				F48151DD2AA6F860001B3640 /* SlideshowView.swift in Sources */,
+				F4A3F3D72AC2A9E600E3DB5F /* CategoryViewModel.swift in Sources */,
 				F402C00C2ABDAFA800B5EDED /* OpacityTransitionModifier.swift in Sources */,
 				F48151962AA623C8001B3640 /* MoviesApp.swift in Sources */,
 				F48151BE2AA63B94001B3640 /* Routable.swift in Sources */,
 				F4A3F3D02AC29B2300E3DB5F /* StudiosView.swift in Sources */,
+				F4A3F3D32AC2A96600E3DB5F /* CategoryView.swift in Sources */,
 				F402C0172ABE1E6600B5EDED /* MovieDetailViewModel.swift in Sources */,
 				F48151DB2AA6F6DC001B3640 /* MainView.swift in Sources */,
 				F4A3F3CC2AC08D1E00E3DB5F /* InformationView.swift in Sources */,

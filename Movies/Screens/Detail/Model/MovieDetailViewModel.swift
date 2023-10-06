@@ -7,13 +7,13 @@
 
 import Foundation
 
-final class MovieDetailViewModel: ObservableObject {
+@Observable final class MovieDetailViewModel {
     
     // MARK: - Properties
     
-    @Published var isLoading: Bool = false
-    @Published var error: Error?
-    @Published var movie: Movie?
+    var movie: Movie?
+    var isLoading: Bool = false
+    var error: Error?
     
     // MARK: - Detail
     

@@ -7,13 +7,13 @@
 
 import Foundation
 
-final class GenresViewModel: ObservableObject {
+@Observable final class GenresViewModel {
     
     // MARK: - Properties
     
-    @Published var isLoading: Bool = false
-    @Published var error: Error?
-    @Published var items: [Genre] = []
+    var items: [Genre] = []
+    var isLoading: Bool = false
+    var error: Error?
     
     // MARK: - List
     
