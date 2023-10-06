@@ -17,10 +17,9 @@ struct SlideshowView: View {
     @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
     @Environment(\.safeAreaInsets) private var insets
+    @Environment(MoviesViewModel.self) private var movies
+    @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
-    
-    @EnvironmentObject private var movies: MoviesViewModel
-    @EnvironmentObject private var genres: GenresViewModel
     
     @State private var selection: Int = .zero
     @State private var slides: [Movie] = []
@@ -162,11 +161,10 @@ struct SlideshowView: View {
                     }()
                     
                     MovieDetailView(id: id)
-                        .environmentObject(movies)
                 } label: {
                     image(movie, proxy: proxy)
                         .frame(width: size.width)
-                        .offset(x: movies.selected == nil ? -offset / 2 : .zero) // Makes a horizontal parallax effect, about turning pages.
+                        .offset(x: movies.selected.movie == nil && movies.selected.category == nil ? -offset / 2 : .zero) // Makes a horizontal parallax effect, about turning pages.
                 } //: NavigationLink
                 .buttonStyle(.plain)
                 

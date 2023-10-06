@@ -18,12 +18,10 @@ struct MovieDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.screenSize) private var size
     @Environment(\.safeAreaInsets) private var insets
+    @Environment(MoviesViewModel.self) private var movies
     @Environment(\.horizontalSizeClass) private var horizontal
     
-    @EnvironmentObject private var movies: MoviesViewModel
-    
-    @StateObject private var model = MovieDetailViewModel()
-    
+    @State private var model = MovieDetailViewModel()
     @State private var offset: CGFloat = .zero
     @State private var opacity: CGFloat = .zero
     @State private var inset: CGFloat = .zero
@@ -52,16 +50,25 @@ struct MovieDetailView: View {
                 content(movie)
             }
         } //: ZStack
+        .navigationTitle(String.empty)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            toolbar
+        }
+        .ignoresSafeArea(.container, edges: .top)
         .animation(.smooth, value: model.isLoading)
-        .toolbar(.hidden, for: .navigationBar)
         .task {
-            await model.detail(for: id)
+            if model.movie == nil {
+                await model.detail(for: id)
+            }
         }
         .onAppear {
-            movies.selected = id
+            movies.selected.movie = id
         }
         .onDisappear {
-            movies.selected = nil
+            movies.selected.movie = nil
         }
     }
     
@@ -73,8 +80,12 @@ struct MovieDetailView: View {
             VStack(spacing: .zero) {
                 poster(movie)
                 overview(movie)
-                divider
-                studios(movie)
+                
+                if !movie.studios.isEmpty {
+                    divider
+                    studios(movie)
+                }
+                
                 information(movie)
                 Spacer()
             } //: VStack
@@ -83,60 +94,67 @@ struct MovieDetailView: View {
             }
         } //: ScrollView
         .scrollIndicators(.hidden)
-        .ignoresSafeArea(.container, edges: .top)
-        .background(Color.systemGray6.ignoresSafeArea(.container, edges: .bottom))
         .overlay(alignment: .top) {
             header(movie)
         }
+        .ignoresSafeArea(.container, edges: .top)
+        .background(Color.systemGray6.ignoresSafeArea(.container, edges: .bottom))
     }
     
     // MARK: - Header
     
     @ViewBuilder
     private func header(_ movie: Movie) -> some View {
-        HStack {
+        Color.clear
+            .frame(height: layout.height.header)
+            .padding(.top, insets.top)
+            .background {
+                let lower = layout.height.slide / 2
+                let upper = layout.height.slide - layout.height.header - insets.top
+                
+                ZStack(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Material.bar)
+                        .ignoresSafeArea(.container, edges: .top)
+                    Rectangle()
+                        .foregroundStyle(Color.line)
+                        .frame(height: 0.3)
+                } //: ZStack
+                .modifier(OpacityTransitionModifier(offset: $offset, value: $opacity, range: lower...upper))
+                .ignoresSafeArea(.container, edges: .top)
+            }
+    }
+    
+    // MARK: - Toolbar
+    
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
             Button {
                 dismiss()
             } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(opacity > 0.5 ? Color.accentColor : Color.white)
                     .frame(width: 30, height: 30)
                     .background(blur.opacity(opacity > 0.5 ? .zero : 1))
                     .clipShape(Circle())
                     .animation(.spring, value: opacity > 0.5)
             } //: Button
-            .padding(16)
-            
-            Spacer()
-        } //: HStack
-        .frame(height: layout.height.header)
-        .background {
-            let lower = layout.height.slide / 2
-            let upper = layout.height.slide - layout.height.header - insets.top
-            
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                    .fill(Material.bar)
-                    .ignoresSafeArea(.container, edges: .top)
-                Rectangle()
-                    .foregroundStyle(Color.line)
-                    .frame(height: 0.3)
-            } //: ZStack
-            .overlay {
-                ZStack {
-                    if opacity >= 1.0 {
-                        Text(movie.title)
-                            .foregroundStyle(Color.label)
-                            .font(.system(size: 17, weight: .semibold))
-                            .frame(maxWidth: 200)
-                            .lineLimit(1)
-                    }
-                } //: ZStack
-                .animation(.smooth, value: opacity >= 1.0)
+            .buttonStyle(.plain)
+        } //: ToolbarItem
+        
+        ToolbarItemGroup(placement: .principal) {
+            if let movie = model.movie {
+                Text(movie.title)
+                    .foregroundStyle(Color.label)
+                    .font(.system(size: 17, weight: .semibold))
+                    .frame(maxWidth: 200)
+                    .lineLimit(1)
+                    .opacity(opacity >= 1 ? 1 : .zero)
+                    .animation(.default, value: opacity)
             }
-            .modifier(OpacityTransitionModifier(offset: $offset, value: $opacity, range: lower...upper))
-        }
+        } //: ToolbarItemGroup
     }
 
     // MARK: - Poster
@@ -244,22 +262,22 @@ struct MovieDetailView: View {
     @ViewBuilder
     private func overview(_ movie: Movie) -> some View {
         VStack(spacing: 12) {
-            HStack {
-                Image(systemName: "star.fill")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(Color.yellow)
-                
-                if let avarage = NumberFormatter.average.string(from: NSNumber(value: movie.rate.average)) {
+            if let avarage = NumberFormatter.average.string(from: NSNumber(value: movie.rate.average)) {
+                HStack {
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundStyle(Color.yellow)
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text("\(avarage) average")
                         Text("\(movie.rate.votes) votes")
                     } //: VStack
                     .font(.system(size: 13))
                     .foregroundStyle(Color.gray)
-                }
-                
-                Spacer()
-            } //: HStack
+                    
+                    Spacer()
+                } //: HStack
+            }
             
             Text(movie.overview)
                 .foregroundStyle(Color.label)
@@ -279,12 +297,15 @@ struct MovieDetailView: View {
     
     @ViewBuilder
     private func information(_ movie: Movie) -> some View {
+        let countries = movie.countries.map({ $0.name }).joined(separator: ", ")
+        let languages = movie.languages.map({ $0.name }).joined(separator: ", ")
+        
         InformationView(title: "Information", items: [
             ("Status", movie.status),
             ("Released", movie.year),
-            ("Run Time", movie.duration),
-            ("Region of Origin", movie.countries[.zero].name),
-            ("Languages", movie.languages.map({ $0.name }).joined(separator: ", "))
+            ("Run Time", movie.duration.isEmpty ? "–" : movie.duration),
+            ("Region of Origin", countries.isEmpty ? "–" : countries),
+            ("Languages", languages.isEmpty ? "–" : languages)
         ])
     }
     

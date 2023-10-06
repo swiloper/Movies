@@ -16,10 +16,9 @@ struct MovieCaruselView: View {
     
     @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
+    @Environment(MoviesViewModel.self) private var movies
+    @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
-    
-    @EnvironmentObject private var movies: MoviesViewModel
-    @EnvironmentObject private var genres: GenresViewModel
     
     let category: Category
     let items: [Movie]
@@ -39,17 +38,24 @@ struct MovieCaruselView: View {
     // MARK: - Header
     
     private var header: some View {
-        HStack {
-            Text(category.description)
-                .font(.system(size: 23))
-                .foregroundStyle(Color.label)
-            
-            Image(systemName: "chevron.right")
-                .font(.system(size: 18))
-                .foregroundColor(.gray)
-        } //: HStack
-        .fontWeight(.bold)
-        .padding(.horizontal, layout.padding)
+        NavigationLink {
+            CategoryView(item: category)
+        } label: {
+            HStack {
+                Text(category.description)
+                    .font(.system(size: 23))
+                    .foregroundStyle(Color.label)
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 18))
+                    .foregroundColor(.gray)
+                
+                Spacer()
+            } //: HStack
+            .fontWeight(.bold)
+            .padding(.horizontal, layout.padding)
+        } //: NavigationLink
+        .buttonStyle(.plain)
     }
     
     // MARK: - List
@@ -62,7 +68,6 @@ struct MovieCaruselView: View {
                 ForEach(Array(previews.enumerated()), id: \.offset) { index, item in
                     NavigationLink {
                         MovieDetailView(id: item.id)
-                            .environmentObject(movies)
                     } label: {
                         preview(index: index, item: item)
                     } //: NavigationLink

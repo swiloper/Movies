@@ -7,18 +7,24 @@
 
 import Foundation
 
-final class MoviesViewModel: ObservableObject {
+@Observable final class MoviesViewModel {
     
     // MARK: - Properties
     
-    @Published var loading: [Category] = []
-    @Published var selected: Int?
-    @Published var error: Error?
-    @Published var categories: [Category : [Movie]] = {
+    var categories: [Category : [Movie]] = {
         var initial: [Category : [Movie]] = [:]
         Category.allCases.forEach({ initial[$0] = [] })
         return initial
     }()
+    
+    var loading: [Category] = []
+    var error: Error?
+    var selected = Selected()
+    
+    struct Selected {
+        var category: Category?
+        var movie: Int?
+    }
     
     // MARK: - List
     

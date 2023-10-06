@@ -30,11 +30,13 @@ struct HeaderView: View {
             Spacer()
         } //: HStack
         .frame(height: layout.height.header)
+        .padding(.top, insets.top)
         .background(Material.bar)
         .overlay(alignment: .bottom) {
             line
         }
         .modifier(OpacityTransitionModifier(offset: $offset, value: .constant(.zero), range: lower...upper))
+        .ignoresSafeArea(.container, edges: .top)
     }
     
     // MARK: - Line
