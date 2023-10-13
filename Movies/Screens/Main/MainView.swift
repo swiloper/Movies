@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 struct MainView: View {
     
     // MARK: - Properties
@@ -19,11 +20,10 @@ struct MainView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            NavigationStack {
-                TabView(selection: $selection) {
-                    home
-                } //: TabView
-            } //: NavigationStack
+            TabView(selection: $selection) {
+                home
+                search
+            } //: TabView
             .environment(\.screenSize, proxy.size)
             .environment(\.safeAreaInsets, proxy.safeAreaInsets)
             .environment(\.layout.height.slide, horizontal == .compact ? proxy.size.width / 2 * 3 : proxy.size.width / 25 * 14)
@@ -40,6 +40,18 @@ struct MainView: View {
                 Text("Watch Now")
             }
             .tag(Int.zero)
+    }
+    
+    // MARK: - Search
+    
+    private var search: some View {
+        SearchView()
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                    .renderingMode(.template)
+                Text("Search")
+            }
+            .tag(1)
     }
 }
 

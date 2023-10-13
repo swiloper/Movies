@@ -42,12 +42,24 @@ enum EndpointPath {
     // MARK: - Category
     
     static func category(_ path: String) -> String {
-        return "/3/movie/\(path)"
+        "/3/movie/\(path)"
     }
     
     // MARK: - Details
     
     static func movie(_ id: Int) -> String {
-        return "/3/movie/\(id)"
+        "/3/movie/\(id)"
+    }
+    
+    // MARK: - Discover
+    
+    static func discover() -> String {
+        "/3/discover/movie"
+    }
+    
+    // MARK: - Search
+    
+    static func search() -> String {
+        "/3/search/movie"
     }
 }
