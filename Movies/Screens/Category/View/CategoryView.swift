@@ -16,13 +16,13 @@ struct CategoryView: View {
     
     @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
-    @Environment(MoviesViewModel.self) private var movies
     @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
     
     @State private var model = CategoryViewModel()
     
-    let item: Category
+    let title: String
+    let isRated: Bool
     
     private var spacing: CGFloat {
         horizontal == .compact ? 10 : 16
@@ -46,6 +46,14 @@ struct CategoryView: View {
             .uppercased()
     }
     
+    // MARK: - Init
+    
+    init(title: String, isRated: Bool, model: CategoryViewModel) {
+        self.title = title
+        self.isRated = isRated
+        _model = State(wrappedValue: model)
+    }
+    
     // MARK: - Body
     
     var body: some View {
@@ -56,19 +64,13 @@ struct CategoryView: View {
                 content
             }
         } //: ZStack
-        .navigationTitle(item.description)
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.large)
         .animation(.smooth, value: model.isLoading)
         .task {
             if model.movies.isEmpty {
-                await model.list(category: item)
+                await model.list()
             }
-        }
-        .onAppear {
-            movies.selected.category = item
-        }
-        .onDisappear {
-            movies.selected.category = nil
         }
     }
     
@@ -76,7 +78,7 @@ struct CategoryView: View {
     
     @ViewBuilder
     private var content: some View {
-        if item == .rated, horizontal == .compact {
+        if isRated, horizontal == .compact {
             list
         } else {
             grid
@@ -135,7 +137,7 @@ struct CategoryView: View {
                     .listRowSeparator(movie == model.movies.last ? .hidden : .automatic, edges: .bottom)
                     .task {
                         if movie == model.movies.last, !model.isLoading {
-                            await model.list(category: item)
+                            await model.list()
                         }
                     }
                 } //: ForEach
@@ -164,7 +166,7 @@ struct CategoryView: View {
                             tile(index, movie)
                                 .task {
                                     if movie == model.movies.last, !model.isLoading {
-                                        await model.list(category: item)
+                                        await model.list()
                                     }
                                 }
                         } //: NavigationLink
@@ -192,7 +194,7 @@ struct CategoryView: View {
     
     @ViewBuilder
     private func tile(_ index: Int, _ movie: Movie) -> some View {
-        if item == .rated, horizontal != .compact {
+        if isRated, horizontal != .compact {
             let description: String = {
                 var result: String = movie.year
                 
@@ -274,5 +276,5 @@ struct CategoryView: View {
 // MARK: - Preview
 
 #Preview("Category") {
-    CategoryView(item: .playing)
+    CategoryView(title: "Upcoming", isRated: false, model: CategoryViewModel(endpoint: Endpoint(path: EndpointPath.category(Category.upcoming.rawValue), method: .get, headers: .default, parameters: .language)))
 }

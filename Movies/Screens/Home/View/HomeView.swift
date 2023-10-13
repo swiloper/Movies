@@ -20,26 +20,28 @@ struct HomeView: View {
     // MARK: - Body
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: .zero) {
-                slideshow
-                carusels
-            } //: VStack
-            .offset {
-                offset = $0.minY
+        NavigationStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: .zero) {
+                    slideshow
+                    carusels
+                } //: VStack
+                .offset {
+                    offset = $0.minY
+                }
+            } //: ScrollView
+            .ignoresSafeArea(.container, edges: .top)
+            .task {
+                movies.list()
+                genres.list()
             }
-        } //: ScrollView
-        .ignoresSafeArea(.container, edges: .top)
-        .task {
-            movies.list()
-            genres.list()
-        }
-        .overlay(alignment: .top) {
-            HeaderView(offset: $offset)
-        }
-        .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)
-        .toolbar(.visible, for: .navigationBar)
-        .toolbarBackground(.hidden, for: .navigationBar)
+            .overlay(alignment: .top) {
+                HeaderView(offset: $offset)
+            }
+            .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)
+            .toolbar(.visible, for: .navigationBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
+        } //: NavigationStack
     }
     
     // MARK: - Slideshow

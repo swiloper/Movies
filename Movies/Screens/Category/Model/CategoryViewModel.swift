@@ -12,23 +12,30 @@ import Alamofire
     
     // MARK: - Properties
     
+    var endpoint: Endpoint
     var movies: [Movie] = []
     var isLoading: Bool = false
     var error: Error?
     var page: Int = 1
     var totalPages: Int = 1
     
+    // MARK: - Init
+    
+    init(endpoint: Endpoint = Endpoint(path: .empty, method: .query)) {
+        self.endpoint = endpoint
+    }
+    
     // MARK: - List
     
     @MainActor
-    func list(category: Category) async {
+    func list() async {
         if page <= totalPages {
             isLoading = true
             
-            var parameters: Parameters = .language
+            var parameters: Parameters = endpoint.parameters ?? .language
             parameters["page"] = page
             
-            let endpoint = Endpoint(path: EndpointPath.category(category.rawValue), method: .get, headers: .default, parameters: parameters)
+            endpoint.parameters = parameters
             Network.shared.request(endpoint: endpoint, decode: MovieListResponse.self) { [weak self] result, status in
                 guard let self else { return }
                 

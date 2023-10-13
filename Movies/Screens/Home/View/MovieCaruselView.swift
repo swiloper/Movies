@@ -39,7 +39,13 @@ struct MovieCaruselView: View {
     
     private var header: some View {
         NavigationLink {
-            CategoryView(item: category)
+            CategoryView(title: category.description, isRated: category == .rated, model: CategoryViewModel(endpoint: Endpoint(path: EndpointPath.category(category.rawValue), method: .get, headers: .default, parameters: .language)))
+                .onAppear {
+                    movies.selected.category = category
+                }
+                .onDisappear {
+                    movies.selected.category = nil
+                }
         } label: {
             HStack {
                 Text(category.description)
@@ -136,7 +142,7 @@ struct MovieCaruselView: View {
                 }
             } //: ZStack
         }
-        .cornerRadius(radius)
+        .clipShape(RoundedRectangle(cornerRadius: radius))
         .border(radius: radius, color: .systemGray6.opacity(0.4), width: 1)
     }
     
