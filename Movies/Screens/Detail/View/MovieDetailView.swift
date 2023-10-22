@@ -126,10 +126,9 @@ struct MovieDetailView: View {
     private func header(_ movie: Movie) -> some View {
         Color.clear
             .frame(height: layout.height.header)
-            .padding(.top, insets.top)
             .background {
                 let lower = layout.height.slide / 2
-                let upper = layout.height.slide - layout.height.header - insets.top
+                let upper = layout.height.slide - layout.height.header
                 
                 ZStack(alignment: .bottom) {
                     Rectangle()
@@ -201,7 +200,7 @@ struct MovieDetailView: View {
             .frame(width: size.width)
             .overlay(alignment: .top) {
                 LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .bottom, endPoint: .top)
-                    .frame(height: insets.top + layout.height.header)
+                    .frame(height: layout.height.header)
                     .offset(y: proxy.frame(in: .global).minY < .zero ? -proxy.frame(in: .global).minY / 1.25 : .zero)
             }
             .overlay(alignment: .bottom) {

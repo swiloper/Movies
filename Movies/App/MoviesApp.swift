@@ -14,14 +14,19 @@ struct MoviesApp: App {
     
     @State private var movies = MoviesViewModel()
     @State private var genres = GenresViewModel()
+    @State private var insets = EdgeInsets()
     
     // MARK: - Body
     
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .environment(movies)
-                .environment(genres)
+            ZStack {
+                NavigationInsetsView(insets: $insets)
+                MainView()
+            } //: ZStack
+            .environment(movies)
+            .environment(genres)
+            .environment(\.layout.height.header, insets.top)
         } //: WindowGroup
     }
 }

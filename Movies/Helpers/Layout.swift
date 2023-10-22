@@ -16,5 +16,5 @@ struct Layout {
 struct Height {
     var slide: CGFloat = .zero
     var slideshow: CGFloat = .zero
-    let header: CGFloat = 44
+    var header: CGFloat = 44
 }

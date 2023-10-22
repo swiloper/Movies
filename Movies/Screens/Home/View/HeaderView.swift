@@ -20,17 +20,17 @@ struct HeaderView: View {
     
     var body: some View {
         let lower = layout.height.slideshow / 2
-        let upper = layout.height.slideshow - layout.height.header - insets.top
+        let upper = layout.height.slideshow - layout.height.header
         
-        HStack {
+        HStack(alignment: .bottom) {
             Spacer()
             Text("Watch Now")
                 .foregroundStyle(Color.label)
                 .font(.system(size: 17, weight: .semibold))
+                .padding(.bottom, 10)
             Spacer()
         } //: HStack
-        .frame(height: layout.height.header)
-        .padding(.top, insets.top)
+        .frame(height: layout.height.header, alignment: .bottom)
         .background(Material.bar)
         .overlay(alignment: .bottom) {
             line
