@@ -73,6 +73,7 @@ struct Movie: Identifiable, Decodable, Equatable {
     let release: String
     let runtime: Int
     let homepage: String
+    let credits: Credit
     let studios: [Studio]
     let countries: [Country]
     let languages: [Language]
@@ -88,7 +89,7 @@ struct Movie: Identifiable, Decodable, Equatable {
     // MARK: - Keys
     
     enum CodingKeys: String, CodingKey {
-        case id, title, adult, overview, runtime, homepage, status, tagline
+        case id, title, adult, overview, runtime, homepage, credits, status, tagline
         case backdrop = "backdrop_path"
         case poster = "poster_path"
         case genres = "genre_ids"
@@ -102,7 +103,7 @@ struct Movie: Identifiable, Decodable, Equatable {
     
     // MARK: - Init
     
-    init(id: Int, backdrop: String, poster: String, title: String, genres: [Int], adult: Bool, overview: String, release: String, runtime: Int = .zero, homepage: String = .empty , studios: [Studio] = [], countries: [Country] = [], languages: [Language] = [], status: String = .empty, tagline: String = .empty, rate: Rate = Rate()) {
+    init(id: Int, backdrop: String, poster: String, title: String, genres: [Int], adult: Bool, overview: String, release: String, runtime: Int = .zero, homepage: String = .empty, credits: Credit = .empty, studios: [Studio] = [], countries: [Country] = [], languages: [Language] = [], status: String = .empty, tagline: String = .empty, rate: Rate = Rate()) {
         self.id = id
         self.backdrop = backdrop
         self.poster = poster
@@ -113,6 +114,7 @@ struct Movie: Identifiable, Decodable, Equatable {
         self.release = release
         self.runtime = runtime
         self.homepage = homepage
+        self.credits = credits
         self.studios = studios
         self.countries = countries
         self.languages = languages
@@ -143,6 +145,7 @@ struct Movie: Identifiable, Decodable, Equatable {
         release = try container.decode(key: .release, default: .empty)
         runtime = try container.decode(key: .runtime, default: .zero)
         homepage = try container.decode(key: .homepage, default: .empty)
+        credits = try container.decode(key: .credits, default: .empty)
         studios = try container.decode(key: .studios, default: [])
         countries = try container.decode(key: .countries, default: [])
         languages = try container.decode(key: .languages, default: [])

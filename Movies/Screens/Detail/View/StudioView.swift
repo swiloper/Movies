@@ -10,7 +10,7 @@ import NukeUI
 import Nuke
 
 @MainActor
-struct StudiosView: View {
+struct StudioView: View {
     
     // MARK: - Properties
     
@@ -18,7 +18,7 @@ struct StudiosView: View {
     @Environment(\.screenSize) private var size
     @Environment(\.horizontalSizeClass) private var horizontal
     
-    let items: [Studio]
+    let item: Studio
     
     private var spacing: CGFloat {
         layout.padding / 2
@@ -35,45 +35,9 @@ struct StudiosView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            title
-            carusel
-        } //: VStack
-        .background(Color(uiColor: .systemBackground))
-    }
-    
-    // MARK: - Title
-    
-    @ViewBuilder
-    private var title: some View {
-        Text("Studios")
-            .font(.system(size: 23, weight: .bold))
-            .foregroundStyle(Color.label)
-            .padding(EdgeInsets(top: 16, leading: layout.padding, bottom: .zero, trailing: layout.padding))
-    }
-    
-    // MARK: - Carusel
-    
-    private var carusel: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: spacing) {
-                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                    card(item)
-                } //: ForEach
-            } //: LazyHStack
-            .padding(EdgeInsets(top: .zero, leading: layout.padding, bottom: layout.margin, trailing: layout.padding))
-            .scrollTargetLayout()
-        } //: ScrollView
-        .scrollIndicators(.hidden)
-        .scrollTargetBehavior(.viewAligned)
-    }
-    
-    // MARK: - Card
-    
-    private func card(_ studio: Studio) -> some View {
-        VStack(alignment: .leading) {
-            logo(studio)
+            logo(item)
             
-            Text(studio.name)
+            Text(item.name)
                 .foregroundStyle(Color.label)
                 .lineLimit(1)
         } //: VStack
@@ -100,12 +64,9 @@ struct StudiosView: View {
                 } //: LazyImage
                 .processors([ImageProcessors.Resize(size: CGSize(width: width, height: width * coefficient))])
             } else {
-                let words: [String] = studio.name.split(separator: String.space).map({ String($0) })
-                if let first = words.first, let second = words.item(at: 1) {
-                    Text(String(first.prefix(1)) + String(second.prefix(1)))
-                        .font(.system(size: 80, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.white)
-                }
+                Text(studio.name.initials)
+                    .font(.system(size: 80, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.white)
             }
         } //: ZStack
         .frame(width: width, height: width * coefficient)
@@ -115,6 +76,6 @@ struct StudiosView: View {
 
 // MARK: - Preview
 
-#Preview("Studios") {
-    StudiosView(items: [])
+#Preview("Studio") {
+    StudioView(item: Studio(id: .zero, logo: .empty, name: .empty))
 }

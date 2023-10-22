@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Alamofire
 
 @Observable final class MovieDetailViewModel {
     
@@ -20,7 +21,11 @@ import Foundation
     func detail(for id: Int) async {
         await MainActor.run {
             self.isLoading = true
-            let endpoint = Endpoint(path: EndpointPath.movie(id), method: .get, headers: .default, parameters: .language)
+            
+            var parameters: Parameters = .language
+            parameters["append_to_response"] = "credits"
+            
+            let endpoint = Endpoint(path: EndpointPath.movie(id), method: .get, headers: .default, parameters: parameters)
             Network.shared.request(endpoint: endpoint, decode: Movie.self) { [weak self] result, status in
                 guard let self else { return }
                 
