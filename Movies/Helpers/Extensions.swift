@@ -136,6 +136,20 @@ extension Bundle {
 extension String {
     static let empty = ""
     static let space = " "
+    
+    var initials: String {
+        self
+            .split(separator: String.space)
+            .map({ String($0) })
+            .filter({ $0.count > 1 })
+            .prefix(2)
+            .map {
+                guard let letter = $0.first(where: { $0.isLetter }) else { return .empty }
+                return String(letter)
+            }
+            .joined()
+            .uppercased()
+    }
 }
 
 // MARK: - Int

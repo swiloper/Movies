@@ -81,8 +81,27 @@ struct MovieDetailView: View {
                 poster(movie)
                 overview(movie)
                 
+                if !movie.credits.cast.isEmpty {
+                    if !movie.overview.isEmpty {
+                        divider
+                    }
+                    
+                    cast(movie)
+                }
+                
+                if !movie.credits.crew.isEmpty {
+                    if !movie.overview.isEmpty || !movie.credits.cast.isEmpty {
+                        divider
+                    }
+                    
+                    crew(movie)
+                }
+                
                 if !movie.studios.isEmpty {
-                    divider
+                    if !movie.overview.isEmpty || !movie.credits.cast.isEmpty || !movie.credits.crew.isEmpty {
+                        divider
+                    }
+                    
                     studios(movie)
                 }
                 
@@ -217,7 +236,8 @@ struct MovieDetailView: View {
                         } //: GeometryReader
                     }
                 
-                Text("\(movie.premiere)  ·  \(movie.duration)")
+                let separator: String = !movie.premiere.isEmpty && !movie.duration.isEmpty ? "  ·  " : .empty
+                Text("\(movie.premiere + separator + movie.duration)")
                     .font(.system(size: 13))
                     .foregroundStyle(Color.white.opacity(0.6))
             } //: VStack
@@ -261,36 +281,64 @@ struct MovieDetailView: View {
     
     @ViewBuilder
     private func overview(_ movie: Movie) -> some View {
-        VStack(spacing: 12) {
-            if let avarage = NumberFormatter.average.string(from: NSNumber(value: movie.rate.average)) {
-                HStack {
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundStyle(Color.yellow)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("\(avarage) average")
-                        Text("\(movie.rate.votes) votes")
-                    } //: VStack
-                    .font(.system(size: 13))
-                    .foregroundStyle(Color.gray)
-                    
-                    Spacer()
-                } //: HStack
-            }
-            
-            Text(movie.overview)
-                .foregroundStyle(Color.label)
-        } //: VStack
-        .padding(EdgeInsets(top: 16, leading: layout.padding, bottom: layout.margin, trailing: layout.padding))
-        .background(Color(uiColor: .systemBackground))
+        let avarage = NumberFormatter.average.string(from: NSNumber(value: movie.rate.average))
+        
+        if avarage != nil && movie.rate.votes > .zero || !movie.overview.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                if let avarage, movie.rate.votes > .zero {
+                    HStack {
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundStyle(Color.yellow)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(avarage) average")
+                            Text("\(movie.rate.votes) votes")
+                        } //: VStack
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.gray)
+                    } //: HStack
+                }
+                
+                if !movie.overview.isEmpty {
+                    Text(movie.overview)
+                        .foregroundStyle(Color.label)
+                }
+            } //: VStack
+            .padding(EdgeInsets(top: 16, leading: layout.padding, bottom: layout.margin, trailing: layout.padding))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(uiColor: .systemBackground))
+        }
+    }
+    
+    // MARK: - Cast
+    
+    private func cast(_ movie: Movie) -> some View {
+        HeadlinedCaruselView(title: "Cast") {
+            ForEach(Array(movie.credits.cast.enumerated()), id: \.offset) { index, cast in
+                PersonView(item: .init(id: cast.id, image: cast.image, name: cast.name, description: cast.character))
+            } //: ForEach
+        } //: DetailCaruselView
+    }
+    
+    // MARK: - Crew
+    
+    private func crew(_ movie: Movie) -> some View {
+        HeadlinedCaruselView(title: "Crew") {
+            ForEach(Array(movie.credits.crew.enumerated()), id: \.offset) { index, crew in
+                PersonView(item: .init(id: crew.id, image: crew.image, name: crew.name, description: crew.job))
+            } //: ForEach
+        } //: DetailCaruselView
     }
     
     // MARK: - Studios
     
-    @ViewBuilder
     private func studios(_ movie: Movie) -> some View {
-        StudiosView(items: movie.studios)
+        HeadlinedCaruselView(title: "Studios") {
+            ForEach(Array(movie.studios.enumerated()), id: \.offset) { index, studio in
+                StudioView(item: studio)
+            } //: ForEach
+        } //: DetailCaruselView
     }
     
     // MARK: - Information

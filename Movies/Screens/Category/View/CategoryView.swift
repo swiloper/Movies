@@ -32,20 +32,6 @@ struct CategoryView: View {
         [GridItem(.adaptive(minimum: horizontal == .compact ? 160 : 220, maximum: horizontal == .compact ? 190 : 280), spacing: spacing)]
     }
     
-    // MARK: - Initials
-    
-    private func initials(_ words: [String]) -> String {
-        words
-            .filter({ $0.count > 1 })
-            .prefix(2)
-            .map {
-                guard let letter = $0.first(where: { $0.isLetter }) else { return .empty }
-                return String(letter)
-            }
-            .joined()
-            .uppercased()
-    }
-    
     // MARK: - Init
     
     init(title: String, isRated: Bool, model: CategoryViewModel) {
@@ -247,11 +233,9 @@ struct CategoryView: View {
     @ViewBuilder
     private func image(_ movie: Movie) -> some View {
         if movie.backdrop.isEmpty {
-            let words: [String] = movie.title.split(separator: String.space).map({ String($0) })
-            
             ZStack {
-                Color.systemGray6
-                Text(initials(words))
+                Color(uiColor: .systemGray4)
+                Text(movie.title.initials)
                     .font(.system(size: 35, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.white)
             } //: ZStack
@@ -263,7 +247,7 @@ struct CategoryView: View {
                             .resizable()
                             .scaledToFill()
                     } else {
-                        Color.systemGray6
+                        Color(uiColor: .systemGray4)
                     }
                 } //: ZStack
                 .animation(.default, value: state.isLoading)
