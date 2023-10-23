@@ -44,20 +44,31 @@ struct HeadlinedCaruselView<Content: View>: View {
             .font(.system(size: 23, weight: .bold))
             .foregroundStyle(Color.label)
             .padding(EdgeInsets(top: 16, leading: layout.padding, bottom: .zero, trailing: layout.padding))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     // MARK: - List
     
     private var list: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: spacing) {
-                content
-            } //: LazyHStack
-            .padding(EdgeInsets(top: .zero, leading: layout.padding, bottom: layout.margin, trailing: layout.padding))
-            .scrollTargetLayout()
-        } //: ScrollView
-        .scrollIndicators(.hidden)
-        .scrollTargetBehavior(.viewAligned)
+        ViewThatFits(in: .horizontal) {
+            items
+            
+            ScrollView(.horizontal) {
+                items
+            } //: ScrollView
+            .scrollIndicators(.hidden)
+            .scrollTargetBehavior(.viewAligned)
+        } //: ViewThatFits
+    }
+    
+    // MARK: - Items
+    
+    private var items: some View {
+        LazyHStack(spacing: spacing) {
+            content
+        } //: LazyHStack
+        .padding(EdgeInsets(top: .zero, leading: layout.padding, bottom: layout.margin, trailing: layout.padding))
+        .scrollTargetLayout()
     }
 }
 
