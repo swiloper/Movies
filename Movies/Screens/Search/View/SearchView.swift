@@ -163,7 +163,9 @@ struct SearchView: View {
             Text("There were no results for \"\(search.lastQuery)\". Try a new search.")
                 .foregroundStyle(Color.secondary)
                 .font(.subheadline)
+                .multilineTextAlignment(.center)
         } //: VStack
+        .padding(.horizontal, layout.margin)
         .frame(maxHeight: .infinity)
     }
 }
