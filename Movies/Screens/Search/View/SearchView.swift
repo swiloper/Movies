@@ -155,16 +155,7 @@ struct SearchView: View {
     // MARK: - Empty
     
     private var empty: some View {
-        VStack(spacing: 4) {
-            Text("No Results")
-                .foregroundStyle(Color.label)
-                .font(.title2)
-                .bold()
-            Text("There were no results for \"\(search.lastQuery)\". Try a new search.")
-                .foregroundStyle(Color.secondary)
-                .font(.subheadline)
-        } //: VStack
-        .frame(maxHeight: .infinity)
+        ContentUnavailableView.search(text: search.lastQuery)
     }
 }
 
