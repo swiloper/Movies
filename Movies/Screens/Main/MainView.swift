@@ -24,6 +24,7 @@ struct MainView: View {
                 ForEach(Tab.allCases) { tab in
                     tab.destination
                         .tag(tab)
+                        .toolbarBackground(.visible, for: .tabBar)
                         .tabItem {
                             tab.label
                         }

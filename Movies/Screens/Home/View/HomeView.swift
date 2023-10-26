@@ -53,6 +53,13 @@ struct HomeView: View {
                 }
             }
         } //: NavigationStack
+        .toolbar(navigation.tabBarVisibility, for: .tabBar)
+        .animation(.default, value: navigation.tabBarVisibility)
+        .onChange(of: navigation.path) {
+            DispatchQueue.main.schedule(after: .init(.now() + 0.3)) {
+                navigation.tabBarVisibility = navigation.path.isEmpty ? .visible : .hidden
+            }
+        }
     }
     
     // MARK: - Slideshow
