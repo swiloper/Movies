@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Country: Decodable, Equatable {
+struct Country: Decodable, Hashable {
     
     // MARK: - Properties
     
@@ -22,7 +22,7 @@ struct Country: Decodable, Equatable {
     }
 }
 
-struct Language: Decodable, Equatable {
+struct Language: Decodable, Hashable {
     
     // MARK: - Properties
     
@@ -35,7 +35,7 @@ struct Language: Decodable, Equatable {
     }
 }
 
-struct Rate: Decodable, Equatable {
+struct Rate: Decodable, Hashable {
     
     // MARK: - Properties
     
@@ -43,7 +43,7 @@ struct Rate: Decodable, Equatable {
     var votes: Int = .zero
 }
 
-struct Studio: Decodable, Identifiable, Equatable {
+struct Studio: Identifiable, Decodable, Hashable {
     
     // MARK: - Properties
     
@@ -59,7 +59,7 @@ struct Studio: Decodable, Identifiable, Equatable {
     }
 }
 
-struct Movie: Identifiable, Decodable, Equatable {
+struct Movie: Identifiable, Decodable, Hashable {
     
     // MARK: - Properties
     

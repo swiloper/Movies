@@ -26,7 +26,7 @@ struct MovieDetailView: View {
     @State private var opacity: CGFloat = .zero
     @State private var inset: CGFloat = .zero
     
-    let id: Int
+    let item: Movie
     
     // MARK: - Parallax
     
@@ -61,14 +61,8 @@ struct MovieDetailView: View {
         .animation(.smooth, value: model.isLoading)
         .task {
             if model.movie == nil {
-                await model.detail(for: id)
+                await model.detail(for: item.id)
             }
-        }
-        .onAppear {
-            movies.selected.movie = id
-        }
-        .onDisappear {
-            movies.selected.movie = nil
         }
     }
     

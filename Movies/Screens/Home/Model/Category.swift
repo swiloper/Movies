@@ -7,20 +7,36 @@
 
 import Foundation
 
-enum Category: String, Identifiable, CaseIterable {
+enum Category: Identifiable, Hashable, CaseIterable {
     
     // MARK: - Properties
     
-    case playing = "now_playing"
+    case playing
     case popular
-    case rated = "top_rated"
+    case rated
     case upcoming
+    case discover(genre: Genre)
     
-    var id: String {
-        self.rawValue
+    static var allCases: [Category] {
+        return [.playing, .popular, .rated, .upcoming]
     }
     
-    var description: String {
+    var id: String {
+        switch self {
+        case .playing:
+            return "now_playing"
+        case .popular:
+            return "popular"
+        case .rated:
+            return "top_rated"
+        case .upcoming:
+            return "upcoming"
+        case .discover(genre: let genre):
+            return String(genre.id)
+        }
+    }
+    
+    var title: String {
         switch self {
         case .playing:
             return "Watch Now"
@@ -30,6 +46,8 @@ enum Category: String, Identifiable, CaseIterable {
             return "Top Rated"
         case .upcoming:
             return "Upcoming"
+        case .discover(genre: let genre):
+            return genre.name
         }
     }
 }

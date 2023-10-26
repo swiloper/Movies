@@ -11,32 +11,31 @@ import Alamofire
 @Observable final class CategoryViewModel {
     
     // MARK: - Properties
-    
-    var endpoint: Endpoint
+
     var movies: [Movie] = []
     var isLoading: Bool = false
     var error: Error?
     var page: Int = 1
     var totalPages: Int = 1
     
-    // MARK: - Init
-    
-    init(endpoint: Endpoint = Endpoint(path: .empty, method: .query)) {
-        self.endpoint = endpoint
-    }
-    
     // MARK: - List
     
     @MainActor
-    func list() async {
+    func list(category: Category) async {
         if page <= totalPages {
             isLoading = true
             
-            var parameters: Parameters = endpoint.parameters ?? .language
+            var path: String = EndpointPath.category(category.id) 
+            var parameters: Parameters = .language
+            
+            if case .discover(let genre) = category {
+                path = EndpointPath.discover()
+                parameters["with_genres"] = genre.id
+            }
+            
             parameters["page"] = page
             
-            endpoint.parameters = parameters
-            Network.shared.request(endpoint: endpoint, decode: MovieListResponse.self) { [weak self] result, status in
+            Network.shared.request(endpoint: Endpoint(path: path, method: .get, headers: .default, parameters: parameters), decode: MovieListResponse.self) { [weak self] result, status in
                 guard let self else { return }
                 
                 switch result {

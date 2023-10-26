@@ -16,6 +16,7 @@ struct MovieCaruselView: View {
     
     @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
+    @Environment(Navigation.self) private var navigation
     @Environment(MoviesViewModel.self) private var movies
     @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
@@ -38,17 +39,11 @@ struct MovieCaruselView: View {
     // MARK: - Header
     
     private var header: some View {
-        NavigationLink {
-            CategoryView(title: category.description, isRated: category == .rated, model: CategoryViewModel(endpoint: Endpoint(path: EndpointPath.category(category.rawValue), method: .get, headers: .default, parameters: .language)))
-                .onAppear {
-                    movies.selected.category = category
-                }
-                .onDisappear {
-                    movies.selected.category = nil
-                }
+        Button {
+            navigation.path.append(.category(item: category))
         } label: {
             HStack {
-                Text(category.description)
+                Text(category.title)
                     .font(.system(size: 23))
                     .foregroundStyle(Color.label)
                 
@@ -60,7 +55,7 @@ struct MovieCaruselView: View {
             } //: HStack
             .fontWeight(.bold)
             .padding(.horizontal, layout.padding)
-        } //: NavigationLink
+        } //: Button
         .buttonStyle(.plain)
     }
     
@@ -68,15 +63,26 @@ struct MovieCaruselView: View {
     
     @ViewBuilder
     private var list: some View {
-        let previews: [Movie] = items.isEmpty ? Array(repeating: Movie.placeholder, count: 8) : items
+        let movies: [Movie] = items.isEmpty ? Array(repeating: Movie.placeholder, count: 8) : items
+        
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
-                ForEach(Array(previews.enumerated()), id: \.offset) { index, item in
-                    NavigationLink {
-                        MovieDetailView(id: item.id)
+                ForEach(Array(movies.enumerated()), id: \.offset) { index, movie in
+                    Button {
+                        navigation.path.append(.movie(item: movie))
                     } label: {
-                        preview(index: index, item: item)
-                    } //: NavigationLink
+                        let width: CGFloat = {
+                            let count: CGFloat = horizontal == .compact ? category == .upcoming ? 1 : 2 : category == .upcoming ? 3 : 5
+                            let spacing: CGFloat = 10
+                            return (size.width - layout.padding - spacing * count - spacing) / count
+                        }()
+                            
+                        VStack(alignment: .leading) {
+                            image(item: movie, width: width)
+                            rate(index: index, item: movie)
+                        } //: VStack
+                        .frame(width: width)
+                    } //: Button
                     .buttonStyle(.plain)
                 } //: ForEach
             } //: LazyHStack
@@ -86,23 +92,6 @@ struct MovieCaruselView: View {
         .scrollTargetBehavior(.viewAligned)
         .redacted(reason: items.isEmpty ? .placeholder : [])
         .disabled(items.isEmpty)
-    }
-    
-    // MARK: - Preview
-    
-    @ViewBuilder
-    private func preview(index: Int, item: Movie) -> some View {
-        let width: CGFloat = {
-            let count: CGFloat = horizontal == .compact ? category == .upcoming ? 1 : 2 : category == .upcoming ? 3 : 5
-            let spacing: CGFloat = 10
-            return (size.width - layout.padding - spacing * count - spacing) / count
-        }()
-            
-        VStack(alignment: .leading) {
-            image(item: item, width: width)
-            rate(index: index, item: item)
-        } //: VStack
-        .frame(width: width)
     }
     
     // MARK: - Image

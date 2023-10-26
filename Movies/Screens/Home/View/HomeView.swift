@@ -12,6 +12,7 @@ struct HomeView: View {
     // MARK: - Properties
     
     @Environment(\.layout) private var layout
+    @Environment(Navigation.self) private var navigation
     @Environment(MoviesViewModel.self) private var movies
     @Environment(GenresViewModel.self) private var genres
     
@@ -20,7 +21,9 @@ struct HomeView: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
+        @Bindable var navigation = navigation
+        
+        NavigationStack(path: $navigation.path) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: .zero) {
                     slideshow
@@ -41,6 +44,14 @@ struct HomeView: View {
             .environment(\.layout.height.slideshow, layout.height.slide + layout.margin)
             .toolbar(.visible, for: .navigationBar)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .category(let value):
+                    CategoryView(item: value)
+                case .movie(let value):
+                    MovieDetailView(item: value)
+                }
+            }
         } //: NavigationStack
     }
     

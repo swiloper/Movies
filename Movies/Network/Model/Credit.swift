@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Credit: Decodable, Equatable {
+struct Credit: Decodable, Hashable {
     let cast: [Cast]
     let crew: [Crew]
 }
@@ -16,7 +16,7 @@ extension Credit {
     static let empty = Credit(cast: [], crew: [])
 }
 
-struct Cast: Decodable, Equatable, Identifiable {
+struct Cast: Identifiable, Decodable, Hashable {
     let id: Int
     let name: String
     let image: String?
@@ -30,7 +30,7 @@ struct Cast: Decodable, Equatable, Identifiable {
     }
 }
 
-struct Crew: Decodable, Equatable, Identifiable {
+struct Crew: Identifiable, Decodable, Hashable {
     let id: Int
     let job: String
     let name: String

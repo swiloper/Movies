@@ -19,19 +19,13 @@ import Foundation
     
     var loading: [Category] = []
     var error: Error?
-    var selected = Selected()
-    
-    struct Selected {
-        var category: Category?
-        var movie: Int?
-    }
     
     // MARK: - List
     
     func list() {
         for category in Category.allCases {
             loading.append(category)
-            let endpoint = Endpoint(path: EndpointPath.category(category.rawValue), method: .get, headers: .default, parameters: .language)
+            let endpoint = Endpoint(path: EndpointPath.category(category.id), method: .get, headers: .default, parameters: .language)
             Network.shared.request(endpoint: endpoint, decode: MovieListResponse.self) { [weak self] result, status in
                 guard let self else { return }
                 

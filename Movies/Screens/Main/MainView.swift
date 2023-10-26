@@ -13,6 +13,7 @@ struct MainView: View {
     // MARK: - Properties
     
     @Environment(\.horizontalSizeClass) private var horizontal
+    @State private var navigation = Navigation()
     @State private var selection: Tab = .home
     
     // MARK: - Body
@@ -28,6 +29,7 @@ struct MainView: View {
                         }
                 } //: ForEach
             } //: TabView
+            .environment(navigation)
             .environment(\.screenSize, proxy.size)
             .environment(\.safeAreaInsets, proxy.safeAreaInsets)
             .environment(\.layout.height.slide, horizontal == .compact ? proxy.size.width / 2 * 3 : proxy.size.width / 25 * 14)

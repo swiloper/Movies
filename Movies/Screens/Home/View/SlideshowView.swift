@@ -17,6 +17,7 @@ struct SlideshowView: View {
     @Environment(\.layout) private var layout
     @Environment(\.screenSize) private var size
     @Environment(\.safeAreaInsets) private var insets
+    @Environment(Navigation.self) private var navigation
     @Environment(MoviesViewModel.self) private var movies
     @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
@@ -149,23 +150,23 @@ struct SlideshowView: View {
         GeometryReader {
             let offset = $0.frame(in: .global).minX
             VStack(spacing: .zero) {
-                NavigationLink {
-                    let id: Int = {
+                Button {
+                    let selection: Movie = {
                         if movie == slides.first, let last = items.last {
-                            return last.id
+                            return last
                         } else if movie == slides.last, let first = items.first {
-                            return first.id
+                            return first
                         }
                         
-                        return movie.id
+                        return movie
                     }()
                     
-                    MovieDetailView(id: id)
+                    navigation.path.append(.movie(item: selection))
                 } label: {
                     image(movie, proxy: proxy)
                         .frame(width: size.width)
-                        .offset(x: movies.selected.movie == nil && movies.selected.category == nil ? -offset / 2 : .zero) // Makes a horizontal parallax effect, about turning pages.
-                } //: NavigationLink
+                        .offset(x: navigation.path.isEmpty ? -offset / 2 : .zero) // Makes a horizontal parallax effect, about turning pages.
+                } //: Button
                 .buttonStyle(.plain)
                 
                 Color.black

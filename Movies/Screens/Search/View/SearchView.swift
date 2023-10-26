@@ -15,6 +15,7 @@ struct SearchView: View {
     // MARK: - Properties
     
     @Environment(\.layout) private var layout
+    @Environment(Navigation.self) private var navigation
     @Environment(GenresViewModel.self) private var genres
     @Environment(\.horizontalSizeClass) private var horizontal
     
@@ -31,7 +32,9 @@ struct SearchView: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
+        @Bindable var navigation = navigation
+        
+        NavigationStack(path: $navigation.path) {
             ZStack {
                 if genres.items.isEmpty {
                     ProgressView()
@@ -55,6 +58,14 @@ struct SearchView: View {
                 }
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .category(let value):
+                    CategoryView(item: value)
+                case .movie(let value):
+                    MovieDetailView(item: value)
+                }
+            }
         } //: NavigationStack
     }
     
@@ -78,8 +89,8 @@ struct SearchView: View {
     private var list: some View {
         List {
             ForEach(search.results) { result in
-                NavigationLink {
-                    MovieDetailView(id: result.id)
+                Button {
+                    navigation.path.append(.movie(item: result))
                 } label: {
                     HStack(spacing: 12) {
                         let height: CGFloat = 80
@@ -121,7 +132,7 @@ struct SearchView: View {
                             } //: Task
                         }
                     }
-                } //: NavigationLink
+                } //: Button
             } //: ForEach
             .listSectionSeparator(.hidden)
         } //: List
@@ -136,15 +147,15 @@ struct SearchView: View {
             LazyVGrid(columns: columns) {
                 ForEach(genres.items) { genre in
                     if let image = UIImage(named: genre.name.lowercased()) {
-                        NavigationLink {
-                            CategoryView(title: genre.name, isRated: false, model: CategoryViewModel(endpoint: Endpoint(path: EndpointPath.discover(), method: .get, headers: .default, parameters: ["language": "en", "with_genres": genre.id])))
+                        Button {
+                            navigation.path.append(.category(item: .discover(genre: genre)))
                         } label: {
                             Image(uiImage: image)
                                 .resizable()
                                 .aspectRatio(17 / 10, contentMode: .fill)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .border(radius: 12, color: .systemGray6.opacity(0.4), width: 1)
-                        } //: NavigationLink
+                        } //: Button
                     }
                 } //: ForEach
             } //: LazyVGrid
